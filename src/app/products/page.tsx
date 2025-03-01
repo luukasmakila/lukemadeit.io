@@ -1,4 +1,4 @@
-import { Header } from "../components/haeder";
+import { Header } from "../components/header";
 
 export default function Products(){
   return (
