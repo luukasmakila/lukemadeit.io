@@ -15,7 +15,7 @@ export const Navbar = () => {
       <img src="/profile-pic.jpg" alt="logo" className="w-8 h-8 rounded-full" />
       <div className="flex gap-1">
         <Button text="Home" href="/" isActive={currentPath === "/"} />
-        <Button text="About" href="/about" isActive={currentPath === "/about"} />
+        <Button text="Blog" href="/blog" isActive={currentPath === "/blog"} />
         <Button text="Gear" href="/gear" isActive={currentPath === "/gear"} />
       </div>
       <a></a>

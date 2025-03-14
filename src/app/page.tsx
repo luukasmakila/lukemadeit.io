@@ -22,7 +22,18 @@ export default function Home() {
             </div>
             <div className="flex flex-col gap-4">
               <h2 className="text-lg">Pinned posts</h2>
-              <BlogCard />
+              <BlogCard
+                title="M4 MacBook Pro - The Truth"
+                description="My experience with the M4 MacBook Pro 3 months later"
+                href="/blog/m4-macbook-pro"
+                image="/blog/m4-macbook-pro.jpg"
+              />
+              <BlogCard
+                title="Samsung Galaxy S25 Ultra Review"
+                description="Apple users perspective on the Samsung Galaxy S25 Ultra"
+                href="/"
+                image="/blog/s25-ultra.jpg"
+              />
             </div>
         </SectionBody>
       </BasePage>
