@@ -6,7 +6,11 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "build:pages": "GITHUB_PAGES=true next build",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "verify:pages": "node scripts/verify-pages.mjs"
   },
   "dependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",

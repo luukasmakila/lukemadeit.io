@@ -19,6 +19,7 @@ Built with Next.js (App Router), React, TypeScript and Tailwind CSS.
   - [Add a blog post](#add-a-blog-post)
   - [Add a gear item](#add-a-gear-item)
 - [Styling](#styling)
+- [GitHub Pages deployment](#github-pages-deployment)
 - [Known issues](#known-issues)
 
 ---
@@ -63,7 +64,7 @@ npm run build
 npm run start    # serves the production build on http://localhost:3000
 ```
 
-> ⚠️ `npm run build` currently fails on lint errors — see [Known issues](#known-issues).
+For GitHub Pages, use `npm run build:pages` instead. It writes a static site to `out/`; `next start` is only for the normal server build.
 
 ## Available scripts
 
@@ -73,6 +74,10 @@ npm run start    # serves the production build on http://localhost:3000
 | `npm run build` | Create an optimized production build (runs lint)  |
 | `npm run start` | Serve the production build                        |
 | `npm run lint`  | Run ESLint (`next lint`)                          |
+| `npm test` | Test asset paths and static-export validation |
+| `npm run typecheck` | Check TypeScript without emitting files |
+| `npm run build:pages` | Export a static site to `out/` for GitHub Pages |
+| `npm run verify:pages` | Check exported routes and local HTML URLs |
 
 ## Project structure
 
@@ -181,12 +186,61 @@ interface Product {
   use them as e.g. `bg-dark`, `text-lightGray`.
 - Card images use the aspect-ratio plugin (`aspect-w-16 aspect-h-9`).
 
+## GitHub Pages deployment
+
+The workflow in [`.github/workflows/deploy-pages.yml`](./.github/workflows/deploy-pages.yml)
+installs dependencies with `npm ci`, tests, lints, builds a static export, checks types,
+and verifies that exported routes and their local assets exist.
+
+- **Pull requests targeting `main`:** run the checks with the `/lukemadeit.io` project-site
+  prefix, without publishing or requiring Pages configuration.
+- **Every push to `main`:** run the checks, upload `out/`, and deploy through the official
+  GitHub Pages artifact/deployment actions.
+- **Manual runs:** available on the Actions tab. Only `main` can publish.
+- Main workflows are serialized without cancelling an active publication. GitHub may
+  replace an older pending run with a newer one when commits arrive quickly.
+- Only the deploy job receives `pages: write` and `id-token: write`; no personal token is needed.
+
+### One-time repository setup
+
+Before merging the deployment PR, open **Settings → Pages → Build and deployment**
+and select **GitHub Actions** as the source. The workflow reads this configuration;
+it deliberately does not enable Pages or change repository settings itself.
+If GitHub creates a `github-pages` environment, allow deployments from `main`
+and configure any desired approval rules there.
+
+By default the site is served at `https://luukasmakila.github.io/lukemadeit.io/`.
+If using `lukemadeit.io`, configure the custom domain in Pages settings and follow
+GitHub's DNS instructions. The workflow reads the configured base path, so custom
+domains use `/` while project-site deployments use `/lukemadeit.io/`.
+No domain or DNS settings are changed by this PR.
+
+### Verify the static export locally
+
+```bash
+npm ci
+npm test
+npm run lint
+NEXT_PUBLIC_BASE_PATH=/lukemadeit.io npm run build:pages
+npm run typecheck
+NEXT_PUBLIC_BASE_PATH=/lukemadeit.io npm run verify:pages
+```
+
+For a custom-domain/root preview, omit `NEXT_PUBLIC_BASE_PATH` from both commands,
+then serve `out/` with any static server, for example
+`python3 -m http.server 3000 --directory out`.
+Do not use `npm run start` to preview the Pages export.
+
+The Pages export uses trailing-slash directories for deep links and unoptimized
+images, since GitHub Pages cannot run Next.js server features. Public image URLs
+are prefixed by `assetPath`; Next.js handles the base path for router navigation.
+New content must remain statically renderable. Server-side rendering, API routes,
+and the default Next.js image optimizer require a different host.
+
 ## Known issues
 
 Documented here so they are easy to pick up later (not fixed in this docs change):
 
-- **`npm run build` fails on lint errors.** Blog post pages contain unescaped `'` and `"` in JSX
-  (`react/no-unescaped-entities`). Escape them or adjust the ESLint rule to get a green build.
 - **Two lockfiles.** Both `package-lock.json` and `yarn.lock` are committed. This README uses npm;
   removing one lockfile would avoid drift.
 - **Animation import name.** `package.json` depends on `motion`, but the code imports from

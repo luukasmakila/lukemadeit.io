@@ -1,5 +1,7 @@
 "use client"
 
+import { assetPath } from "@/app/assetPath";
+
 import { useRouter } from "next/navigation";
 import { Product } from "@/app/types";
 
@@ -12,7 +14,7 @@ export const BlogCard = ({ title, description, href, image }: Product) => {
       onClick={() => router.push(href)}
     >
       <img
-        src={image}
+        src={assetPath(image)}
         alt={title}
         className="object-cover w-full h-full transition-transform duration-300 ease-in-out transform group-hover:scale-105"
       />
