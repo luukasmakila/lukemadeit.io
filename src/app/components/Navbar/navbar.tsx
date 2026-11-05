@@ -1,4 +1,6 @@
 "use client"
+
+import { assetPath } from "@/app/assetPath";
 import { useEffect } from "react"
 import { usePathname } from "next/navigation"
 import { Button } from "./button"
@@ -12,7 +14,7 @@ export const Navbar = () => {
 
   return (
     <nav className="flex width-full max-w-[800px] justify-between items-center mt-4 mx-auto px-4">
-      <img src="/profile-pic.jpg" alt="logo" className="w-8 h-8 rounded-full" />
+      <img src={assetPath("/profile-pic.jpg")} alt="logo" className="w-8 h-8 rounded-full" />
       <div className="flex gap-1">
         <Button text="Home" href="/" isActive={currentPath === "/"} />
         <Button text="Blog" href="/blog" isActive={currentPath === "/blog"} />

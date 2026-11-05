@@ -1,3 +1,4 @@
+import { assetPath } from "@/app/assetPath";
 interface SocialMediaButtonProps {
   href: string;
   text: string;
@@ -12,7 +13,7 @@ export const SocialMediaButton = ({ href, text, icon }: SocialMediaButtonProps) 
       >
         {text}
       </a>
-      <img className="w-3 h-3" src={icon}/>
+      <img className="w-3 h-3" src={assetPath(icon)}/>
     </div>
   )
 };
